@@ -1,7 +1,7 @@
 let simpleRTTime = 0;
 let choiceRTTime = 0;
-let minWaitTime = 3;
-let maxWaitTime = 7;
+let minWaitTime = 1;
+let maxWaitTime = 1;
 let rounds = 5;
 let DEBUG = false;
 function hideItem(itemID){
@@ -12,6 +12,9 @@ function showItem(itemID){
     document.getElementById(itemID).style.display = 'block';
 }
 
+function setLightColor(itemID, color){
+    document.getElementById(itemID).style.backgroundColor = color;
+}
 function keyPress(key){
     return new Promise((resolve)=> {
         document.addEventListener('keypress', e => {
@@ -29,13 +32,6 @@ function randomDelay(min, max, fun) {
     setTimeout(fun, delay);
 }
 
-function hideAllLight(){
-    hideItem('centerLight');
-    hideItem('leftLight');
-    hideItem('rightLight');
-}
-
-
 // Inital Game State
 function initialGameState() {
     hideAllLight()
@@ -48,7 +44,7 @@ function initialGameState() {
 
 // Simple Reaction Time
 async function simpleRT(){
-    hideAllLight()
+    hideItem("light");
     let starttime = 0;
     let endtime = 0;
     simpleRTTime = 0;
@@ -67,29 +63,30 @@ async function simpleRT(){
 
     // game
     for (let i=0; i<rounds; i++){
-        randomDelay(minWaitTime, maxWaitTime, ()=>showItem("centerLight"))
+        randomDelay(minWaitTime, maxWaitTime, ()=>showItem("light"))
         starttime = performance.now();
         await keyPress('j')
         endtime = performance.now();
         simpleRTTime += (endtime-starttime);
-        hideItem("centerLight");
+        hideItem("light");
     }
     simpleRTTime /= 5;  // average time, in milliseconds
 
     // show score
-    // let info = "It takes you an average of <strong>" + simpleRTTime + 
-    //            "</strong> milliseconds to react"
-    // document.getElementById("intro").innerHTML = info;
+    let info = "It takes you an average of <strong>" + simpleRTTime + 
+               "</strong> milliseconds to react"
+    document.getElementById("intro").innerHTML = info;
     button = document.getElementById('playButton');
     button.innerHTML = "NEXT";
     button.onclick = choiceRT;
     showItem("intro");
     showItem("playButton");
+    // choiceRT();
 }
 
 // Choice Reaction Time
 async function choiceRT(){
-    hideAllLight()
+    hideItem("light");
     let starttime = 0;
     let endtime = 0;
     choiceRTTime = 0;
@@ -106,13 +103,15 @@ async function choiceRT(){
     // game
     for (let i=0; i<rounds; i++){
         let showLeft = Math.round(Math.random()) === 0; // generate 0/1
-        randomDelay(minWaitTime, maxWaitTime, ()=>showItem(showLeft ? "leftLight" : "rightLight"))
+        randomDelay(minWaitTime, maxWaitTime, ()=>{
+            setLightColor(showLeft ? "rgb(0, 255, 106);" : "rgb(162, 92, 228)");
+            showItem("light");
+        });
         starttime = performance.now();
         await keyPress(showLeft ? 'j' : 'k');
         endtime = performance.now();
         choiceRTTime += (endtime-starttime);
-        hideItem("leftLight");
-        hideItem("rightLight");
+        hideItem("light");
     }
     choiceRTTime /= 5;  // average time, in milliseconds
 
@@ -120,11 +119,12 @@ async function choiceRT(){
     // let info = "It takes you an average of <strong>" + choiceRTTime + 
     //            "</strong> milliseconds to react"
     // document.getElementById("intro").innerHTML = info;
-    button = document.getElementById('playButton');
-    button.innerHTML = "Show Stats";
-    button.onclick = showStats;
-    showItem("intro");
-    showItem("playButton");
+    // button = document.getElementById('playButton');
+    // button.innerHTML = "Show Stats";
+    // button.onclick = showStats;
+    // showItem("intro");
+    // showItem("playButton");
+    showStats();
 }
 
 

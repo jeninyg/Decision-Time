@@ -1,20 +1,20 @@
 let simpleRTTime = 0;
 let choiceRTTime = 0;
-let minWaitTime = 1;
-let maxWaitTime = 1;
+let minWaitTime = 3;
+let maxWaitTime = 8;
 let rounds = 5;
 let DEBUG = false;
+
 function hideItem(itemID){
     document.getElementById(itemID).style.display = 'none';
 }
-
 function showItem(itemID){
     document.getElementById(itemID).style.display = 'block';
 }
-
 function setLightColor(itemID, color){
     document.getElementById(itemID).style.backgroundColor = color;
 }
+
 function keyPress(key){
     return new Promise((resolve)=> {
         document.addEventListener('keypress', e => {
@@ -25,7 +25,6 @@ function keyPress(key){
     })
 }
 
-
 function randomDelay(min, max, fun) {
     // delay [min, max] seconds
     let delay = (Math.random() * (max-min+1) + min)*1000;
@@ -34,7 +33,6 @@ function randomDelay(min, max, fun) {
 
 // Inital Game State
 function initialGameState() {
-    hideAllLight()
     hideItem("intro");
     button = document.getElementById('playButton');
     button.innerHTML = "PLAY";
@@ -73,8 +71,9 @@ async function simpleRT(){
     simpleRTTime /= 5;  // average time, in milliseconds
 
     // show score
-    let info = "It takes you an average of <strong>" + simpleRTTime + 
-               "</strong> milliseconds to react"
+    // let info = "It takes you an average of <strong>" + simpleRTTime + 
+    //            "</strong> milliseconds to react"
+    let info = "";
     document.getElementById("intro").innerHTML = info;
     button = document.getElementById('playButton');
     button.innerHTML = "NEXT";
@@ -104,7 +103,7 @@ async function choiceRT(){
     for (let i=0; i<rounds; i++){
         let showLeft = Math.round(Math.random()) === 0; // generate 0/1
         randomDelay(minWaitTime, maxWaitTime, ()=>{
-            setLightColor(showLeft ? "rgb(0, 255, 106);" : "rgb(162, 92, 228)");
+            setLightColor("light", showLeft ? "rgb(0, 255, 106);" : "rgb(162, 92, 228)");
             showItem("light");
         });
         starttime = performance.now();
@@ -118,18 +117,19 @@ async function choiceRT(){
     // show score
     // let info = "It takes you an average of <strong>" + choiceRTTime + 
     //            "</strong> milliseconds to react"
-    // document.getElementById("intro").innerHTML = info;
-    // button = document.getElementById('playButton');
-    // button.innerHTML = "Show Stats";
-    // button.onclick = showStats;
-    // showItem("intro");
-    // showItem("playButton");
-    showStats();
+    let info = "";
+    document.getElementById("intro").innerHTML = info;
+    button = document.getElementById('playButton');
+    button.innerHTML = "Show Stats";
+    button.onclick = showStats;
+    showItem("intro");
+    showItem("playButton");
+
 }
 
 
 function showStats() {
-    hideAllLight()
+    hideItem("light");
     // let simpleInfo = "<p> Simple Reaction Time: <strong>" + simpleRTTime + 
     // "</strong> milliseconds </p>"
     // let choiceInfo = "<p> Choice Reaction Time: <strong>" + choiceRTTime + 

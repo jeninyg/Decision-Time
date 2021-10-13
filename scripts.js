@@ -1,9 +1,9 @@
 let simpleRTTime = 0;
 let choiceRTTime = 0;
-let minWaitTime = 2;
+let minWaitTime = 3;
 let maxWaitTime = 7;
 let rounds = 5;
-let DEBUG = true;
+let DEBUG = false;
 function hideItem(itemID){
     document.getElementById(itemID).style.display = 'none';
 }
@@ -77,9 +77,9 @@ async function simpleRT(){
     simpleRTTime /= 5;  // average time, in milliseconds
 
     // show score
-    let info = "It takes you an average of <strong>" + simpleRTTime + 
-                "</strong> milliseconds to react"
-    document.getElementById("intro").innerHTML = info;
+    // let info = "It takes you an average of <strong>" + simpleRTTime + 
+    //            "</strong> milliseconds to react"
+    // document.getElementById("intro").innerHTML = info;
     button = document.getElementById('playButton');
     button.innerHTML = "NEXT";
     button.onclick = choiceRT;
@@ -117,9 +117,9 @@ async function choiceRT(){
     choiceRTTime /= 5;  // average time, in milliseconds
 
     // show score
-    let info = "It takes you an average of <strong>" + choiceRTTime + 
-                "</strong> milliseconds to react"
-    document.getElementById("intro").innerHTML = info;
+    // let info = "It takes you an average of <strong>" + choiceRTTime + 
+    //            "</strong> milliseconds to react"
+    // document.getElementById("intro").innerHTML = info;
     button = document.getElementById('playButton');
     button.innerHTML = "Show Stats";
     button.onclick = showStats;
@@ -130,13 +130,13 @@ async function choiceRT(){
 
 function showStats() {
     hideAllLight()
-    let simpleInfo = "<p> Simple Reaction Time: <strong>" + simpleRTTime + 
-    "</strong> milliseconds </p>"
-    let choiceInfo = "<p> Choice Reaction Time: <strong>" + choiceRTTime + 
-    "</strong> milliseconds </p>"
+    // let simpleInfo = "<p> Simple Reaction Time: <strong>" + simpleRTTime + 
+    // "</strong> milliseconds </p>"
+    // let choiceInfo = "<p> Choice Reaction Time: <strong>" + choiceRTTime + 
+    // "</strong> milliseconds </p>"
     let decisionInfo = "<p> Decision Time: <strong>" + (choiceRTTime-simpleRTTime) + 
-    "</strong> milliseconds </p>"
-    document.getElementById("intro").innerHTML = simpleInfo + choiceInfo + decisionInfo;
+                        "</strong> milliseconds </p>"
+    document.getElementById("intro").innerHTML = decisionInfo;
     showItem("intro");
 
     button = document.getElementById('playButton');
